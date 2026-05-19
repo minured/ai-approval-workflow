@@ -1,0 +1,34 @@
+# Generic service upgrade watcher example.
+# Disabled by default because command_check and queued_action require private allowlist config.
+id: service-upgrade-watch
+enabled: false
+trigger:
+  type: schedule
+  cron: "0 9 * * *"
+  timezone: UTC
+steps:
+  - id: check
+    type: command_check
+    # Name must exist in private AAW_ACTIONS_CONFIG_PATH allowlist.
+    name: service_version_check
+  - id: summarize
+    type: ai_summary
+    prompt: "Summarize current version, latest version, release notes, known issues, risk, and recommendation."
+  - id: approval
+    type: approval
+    title: "Service upgrade approval"
+    risk: medium
+    recommendation: "Approve only after reviewing the summary."
+    choices:
+      - value: approve
+        label: Upgrade
+        style: approve
+      - value: reject
+        label: Skip
+        style: reject
+  - id: upgrade
+    type: queued_action
+    # Action must exist in private AAW_ACTIONS_CONFIG_PATH allowlist.
+    action: service_bundle_upgrade
+notify:
+  channel: ops-default

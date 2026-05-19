@@ -1,0 +1,6 @@
+title = "ai-approval-workflow public secret scan"
+
+[[rules]]
+id = "private-key"
+description = "Private key material"
+regex = '''-----BEGIN (RSA|DSA|EC|OPENSSH|PGP)? ?PRIVATE KEY-----'''

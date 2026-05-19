@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ approval.title }}</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f6f7f9; color: #172033; }
+    main { max-width: 680px; margin: 0 auto; padding: 18px; }
+    .card { background: white; border: 1px solid #e6e8ee; border-radius: 18px; padding: 18px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+    h1 { font-size: 20px; margin: 0 0 10px; }
+    .meta { color: #667085; font-size: 13px; margin-bottom: 14px; }
+    .summary { white-space: pre-wrap; line-height: 1.55; font-size: 15px; }
+    .risk { display: inline-flex; border-radius: 999px; padding: 4px 10px; background: #eef4ff; color: #175cd3; font-size: 12px; }
+    .actions { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 18px; }
+    button { border: 0; border-radius: 12px; padding: 13px 14px; font-size: 16px; font-weight: 650; }
+    .approve { background: #1570ef; color: white; }
+    .reject { background: #fff1f3; color: #c01048; }
+    .snooze { background: #f2f4f7; color: #344054; }
+    .details { margin-top: 14px; padding: 12px; background: #f8fafc; border-radius: 12px; font-size: 13px; color: #475467; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .result { margin-top: 14px; font-size: 14px; color: #067647; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="card">
+    <h1>{{ approval.title }}</h1>
+    <div class="meta">Approval ID: {{ approval.approval_id }}</div>
+    <div class="risk">Risk: {{ approval.risk }}</div>
+    <p class="summary">{{ approval.summary }}</p>
+    <p class="summary"><strong>Recommendation:</strong> {{ approval.recommendation }}</p>
+    <div class="actions">
+      {% for choice in approval.choices %}
+      <button class="{{ choice.style }}" data-decision="{{ choice.value }}">{{ choice.label }}</button>
+      {% endfor %}
+    </div>
+    <div id="result" class="result"></div>
+    <details class="details">
+      <summary>查看详情</summary>
+      {{ details_json }}
+    </details>
+  </section>
+</main>
+<script>
+  const approvalId = {{ approval.approval_id | tojson }};
+  const token = {{ token | tojson }};
+  const result = document.getElementById('result');
+  document.querySelectorAll('button[data-decision]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      result.textContent = 'Submitting...';
+      const response = await fetch(`/api/approvals/${approvalId}/decision`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token, decision: button.dataset.decision}),
+      });
+      const payload = await response.json();
+      result.textContent = response.ok ? `Done: ${payload.status}` : `Failed: ${payload.detail || payload.error}`;
+    });
+  });
+</script>
+</body>
+</html>

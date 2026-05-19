@@ -1,0 +1,38 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local secrets and runtime data
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Private deployment overlays
+workflows/
+private/
+local/
+.deleted/
+actions.yaml
+*.local.yaml
+*.secret.yaml
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Editor files
+.vscode/
+.idea/
+.DS_Store

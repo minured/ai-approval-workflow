@@ -1,0 +1,25 @@
+# Safe demo workflow for ai-approval-workflow MVP.
+# It proves scheduled task -> AI summary -> mobile approval -> allowlisted demo action.
+id: demo-daily-summary
+enabled: true
+trigger:
+  type: schedule
+  cron: "0 9 * * *"
+  timezone: Asia/Shanghai
+steps:
+  - id: collect
+    type: demo_summary
+    subject: "Daily demo summary"
+  - id: summarize
+    type: ai_summary
+    optional: true
+  - id: approval
+    type: approval
+    title: "Demo approval"
+    risk: low
+    recommendation: "This demo action is safe to execute."
+  - id: action
+    type: demo_action
+    requires_approval: true
+notify:
+  channel: ops-default
