@@ -23,7 +23,7 @@
   </defs>
   <rect width="1000" height="680" rx="32" fill="url(#bg)"/>
   <text class="title" x="70" y="78">Mobile approval in two taps</text>
-  <text class="body" x="72" y="108">The phone message stays short. The approval page carries the summary, risk, and fixed choices.</text>
+  <text class="body" x="72" y="108">Notifications stay short. Approval pages carry the summary, risk, and fixed choices.</text>
 
   <g transform="translate(116 158)" filter="url(#shadow)">
     <rect width="302" height="456" rx="44" fill="#0D1517"/>

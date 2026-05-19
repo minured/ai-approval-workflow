@@ -2,7 +2,7 @@
 
 `command_check` and `queued_action` keep AI away from arbitrary shell execution.
 
-- `command_check` runs a named read-only command from a private allowlist.
+- `command_check` runs a named read-only command from a deployment-managed allowlist.
 - `queued_action` writes an approved JSON request into a queue.
 - `scripts/aaw_action_runner.py` is intended to run as a root-managed process and validates the action name again before executing a fixed command.
 

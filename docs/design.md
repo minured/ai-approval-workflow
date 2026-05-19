@@ -46,7 +46,7 @@ The MVP supports generic composition without hard-coding a specific business tas
 - `ai_summary`: summarize task or fetch output with an optional prompt.
 - `notify`: send the latest summary/content to the configured notification webhook.
 - `approval`: ask for simple mobile choices such as Execute / Skip / Snooze.
-- `command_check`: run a named read-only command from private allowlist config.
+- `command_check`: run a named read-only command from deployment-managed allowlist config.
 - `queued_action`: enqueue an approved named action for a root-side runner.
 - `demo_summary` and `demo_action`: safe sample steps.
 
@@ -54,7 +54,7 @@ The MVP supports generic composition without hard-coding a specific business tas
 
 `/admin` is intentionally limited to viewing and deleting workflows. Deletion is a soft delete that moves YAML files into `.deleted/` and reloads the scheduler.
 
-The admin page does not parse natural language and does not create or edit workflows. Those operations are handled by the Codex skill in `skills/ai-approval-workflow/SKILL.md`.
+The admin page does not parse natural language and does not create or edit workflows. Those operations are handled outside the web UI by the bundled skill or another operator-reviewed workflow authoring process.
 
 ## Approval UI
 
@@ -64,7 +64,7 @@ The MVP uses a mobile web approval page instead of relying on provider-specific 
 
 Production actions use a two-part model:
 
-- `command_check` runs a named read-only command from a private allowlist.
+- `command_check` runs a named read-only command from a deployment-managed allowlist.
 - `queued_action` writes an approved JSON request into an action queue.
 
-A root-side runner validates queued action names against private config before executing fixed scripts. AI summarizes and recommends, but it never creates shell commands.
+A root-side runner validates queued action names against deployment-managed config before executing fixed scripts. AI summarizes and recommends, but it never creates shell commands.

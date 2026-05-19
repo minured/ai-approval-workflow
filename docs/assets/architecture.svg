@@ -23,7 +23,7 @@
       .tiny{font:600 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#6D8584}
       .mono{font:700 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#1B6775}
       .box{fill:white;stroke:#D6E5E1;stroke-width:1.5}
-      .private{fill:#FFF9EE;stroke:#F0D9A8;stroke-width:1.5;stroke-dasharray:7 7}
+      .deployment{fill:#FFF9EE;stroke:#F0D9A8;stroke-width:1.5;stroke-dasharray:7 7}
       .edge{stroke:#27666E;stroke-width:2.2;marker-end:url(#arrow);fill:none}
     </style>
   </defs>
@@ -62,11 +62,11 @@
     <text class="body" x="416" y="471">for phone messages.</text>
     <text class="mono" x="416" y="495">title + content</text>
 
-    <rect class="private" x="76" y="380" width="214" height="160" rx="24"/>
-    <text class="h2" x="104" y="420">Private overlay</text>
+    <rect class="deployment" x="76" y="380" width="214" height="160" rx="24"/>
+    <text class="h2" x="104" y="420">Deployment config</text>
     <text class="body" x="104" y="448">.env, workflows,</text>
     <text class="body" x="104" y="471">allowlist, scripts, DB.</text>
-    <text class="tiny" x="104" y="506">Not committed to public git</text>
+    <text class="tiny" x="104" y="506">Stored outside public git</text>
   </g>
 
   <g filter="url(#shadow)">

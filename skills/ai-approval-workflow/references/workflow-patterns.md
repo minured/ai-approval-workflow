@@ -4,7 +4,7 @@ Use these as reusable shapes when translating natural language into workflow YAM
 
 ## Scheduled digest
 
-For “每天总结 X 发我”:
+For a request such as “每天总结 X”:
 
 ```yaml
 steps:
@@ -15,7 +15,7 @@ steps:
 
 ## Monitor and approve action
 
-For “检查 X，值得就问我是否执行 Y”:
+For a request such as “检查 X，值得时审批执行 Y”:
 
 ```yaml
 steps:
@@ -34,7 +34,7 @@ steps:
 
 For “检查版本更新和有没有问题”:
 
-- Use `command_check` if current version is private/local.
+- Use `command_check` if current version is internal/local.
 - Use `http_fetch` if all sources are public.
 - AI prompt should ask for: current version, latest version, release notes, recent issues, risk, recommendation.
 

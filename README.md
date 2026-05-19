@@ -6,43 +6,43 @@
 
 Open-source scheduled AI workflow runtime with mobile-first approvals.
 
-`ai-approval-workflow` is for repetitive work that follows this pattern:
+`ai-approval-workflow` is designed for repetitive operational or personal tasks with this shape:
 
 ```text
-something should be checked regularly
-  -> AI can read and summarize the result
-  -> you only want to be interrupted when a decision is needed
-  -> any real action must be fixed, reviewed, and allowlisted
+regular check
+  -> AI-readable result
+  -> concise notification or approval request
+  -> optional fixed action after approval
 ```
 
-It is intentionally **not** a chat bot and **not** a visual workflow builder. Natural-language task creation/editing/deletion is handled by the bundled Codex skill, which writes reviewable YAML workflow files.
+The project is intentionally **not** a chat bot and **not** a visual workflow builder. Natural-language task creation/editing/deletion is provided by a bundled Codex skill that writes reviewable YAML workflow files.
 
 ## Why this exists
 
-Most automation tools are either too silent or too dangerous:
+Many automation systems fall into one of two extremes:
 
-- cron jobs run without enough context;
-- chat bots require long conversations for simple decisions;
-- AI agents can be risky if they directly execute arbitrary commands;
-- human reviewers do not want another dashboard to monitor all day.
+- cron jobs run silently with limited context;
+- chat bots and agents require long conversations for simple decisions;
+- direct AI command execution can create unsafe operational boundaries;
+- dashboards require continuous human attention.
 
-This project keeps the useful middle ground: **scheduled AI summaries + simple phone approval + fixed allowlisted actions**.
+This project focuses on a narrower pattern: **scheduled AI summaries + mobile approval + fixed allowlisted actions**.
 
 ## What it can do
 
 - Run scheduled AI tasks from YAML cron definitions.
 - Fetch public pages or run named read-only checks.
-- Summarize long output into short phone-friendly messages.
-- Ask for mobile approval with simple buttons such as Upgrade / Skip.
+- Summarize long output into short mobile-friendly messages.
+- Create approval pages with simple buttons such as Upgrade / Skip.
 - Queue approved actions for a root-side runner that validates names again.
 - Provide a small admin page for viewing and soft-deleting configured tasks.
-- Let a Codex skill convert natural language into reviewed workflow YAML.
+- Convert natural-language task requests into reviewed workflow YAML through the bundled skill.
 
 ## How it works
 
 ![Architecture diagram](docs/assets/architecture.svg)
 
-The public repository contains the generic framework. Your private deployment keeps secrets, production workflows, action allowlists, scripts, and databases outside git.
+The public repository contains generic framework code. Deployment-specific secrets, production workflows, action allowlists, scripts, and databases stay outside git.
 
 ![Workflow lifecycle](docs/assets/workflow-lifecycle.svg)
 
@@ -56,17 +56,17 @@ Admin page:
 
 ![Admin dashboard mockup](docs/assets/admin-dashboard-mock.svg)
 
-## Real-world use cases
+## Use cases
 
-- **GitHub Trending digest:** summarize interesting repositories every morning.
-- **Service upgrade review:** check versions and known issues, then ask whether to upgrade.
-- **Certificate/domain expiry watcher:** notify before something important expires.
+- **GitHub Trending digest:** summarize notable repositories on a schedule.
+- **Service upgrade review:** check versions and known issues before asking whether to upgrade.
+- **Certificate/domain expiry watcher:** notify before important resources expire.
 - **Backup health report:** turn raw backup logs into a weekly risk summary.
-- **CI failure triage:** group failures and suggest the next action.
+- **CI failure triage:** group failures and summarize likely causes.
 - **Billing/subscription drift:** summarize unusual spend or upcoming renewals.
-- **Personal convenience tasks:** price drops, travel disruption summaries, policy updates, and home server health.
+- **Personal convenience tasks:** price changes, travel disruption summaries, policy updates, and home server health.
 
-See [Use Cases](docs/use-cases.md) for concrete examples, including a sanitized real-world upgrade approval case.
+See [Use Cases](docs/use-cases.md) for concrete examples, including a coordinated multi-component service upgrade pattern.
 
 ## Quick start
 
@@ -98,7 +98,7 @@ Common MVP step types:
 - `ai_summary`: summarize the latest task/fetch result;
 - `notify`: send a notification through the configured webhook;
 - `approval`: create a mobile approval page with simple choices;
-- `command_check`: run a named read-only command from private allowlist config;
+- `command_check`: run a named read-only command from deployment-managed allowlist config;
 - `queued_action`: enqueue an approved named action for a root-side runner;
 - `demo_summary` / `demo_action`: safe local demo steps.
 
@@ -115,25 +115,25 @@ The bundled Codex skill lives in:
 skills/ai-approval-workflow/SKILL.md
 ```
 
-Install or copy it into `$CODEX_HOME/skills/ai-approval-workflow/`, then use prompts such as:
+Install or copy it into `$CODEX_HOME/skills/ai-approval-workflow/`. Example requests:
 
-- “每天早上 9 点给我发 GitHub Trending 总结，不需要审批”
-- “每天检查某个服务版本，如果值得升级就发手机审批，按钮是升级/跳过”
-- “删除某个定时任务”
+- `Send a GitHub Trending summary every morning at 9, no approval required.`
+- `Check a service version daily; if an upgrade looks worthwhile, ask for mobile approval with Upgrade / Skip buttons.`
+- `Soft-delete the weekly backup report workflow.`
 
-The skill should keep private hostnames, tokens, scripts, and production workflow files outside this public repository.
+The skill keeps hostnames, tokens, scripts, and production workflow files out of the public repository.
 
-## Private overlay
+## Deployment-specific configuration
 
-This repository is safe to publish when used as a framework. Your deployment-specific data should stay outside git:
+This repository is suitable for public release as a framework. Deployment-specific data should stay outside git:
 
 - `.env` and any `.env.*` files;
-- production workflow files under `/etc/ai-approval-workflow/workflows` or another private directory;
+- production workflow files under `/etc/ai-approval-workflow/workflows` or another operator-managed directory;
 - action allowlists such as `/etc/ai-approval-workflow/actions.yaml`;
 - root-owned scripts used by `command_check` or `queued_action`;
 - SQLite databases and action queue files.
 
-See [Private Overlay](docs/private-overlay.md) and [Publishing Checklist](docs/publishing-checklist.md) before publishing.
+See [Deployment-Specific Configuration](docs/private-overlay.md) and [Publishing Checklist](docs/publishing-checklist.md) before publishing a fork or derivative.
 
 ## Documentation
 
@@ -142,7 +142,7 @@ See [Private Overlay](docs/private-overlay.md) and [Publishing Checklist](docs/p
 - [Security Model](docs/security.md)
 - [Deployment](docs/deployment.md)
 - [Action Runner](docs/action-runner.md)
-- [Private Overlay](docs/private-overlay.md)
+- [Deployment-Specific Configuration](docs/private-overlay.md)
 - [Publishing Checklist](docs/publishing-checklist.md)
 
 ## License

@@ -41,7 +41,7 @@ The runtime records approval creation, decisions, workflow completion, and failu
 
 The app must not run arbitrary shell commands. Production actions are split into:
 
-- named read-only commands, configured in a private allowlist;
+- named read-only commands, configured in a deployment-managed allowlist;
 - queued action JSON files, consumed by a root-owned runner;
 - fixed scripts such as `service-bundle-upgrade`.
 

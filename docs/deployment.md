@@ -1,14 +1,14 @@
 # Deployment
 
-This document describes a generic production deployment. Replace domains and paths with your own private values, and keep all secrets outside git.
+This document describes a generic production deployment. Domains, paths, credentials, and workflow files should be supplied by each deployment and kept outside git.
 
 ## Recommended paths
 
 ```text
 /opt/ai-approval-workflow                    # application checkout
-/etc/ai-approval-workflow/.env               # private environment file
-/etc/ai-approval-workflow/workflows          # private workflow YAML directory
-/etc/ai-approval-workflow/actions.yaml       # private command/action allowlist
+/etc/ai-approval-workflow/.env               # deployment-managed environment file
+/etc/ai-approval-workflow/workflows          # deployment-managed workflow YAML directory
+/etc/ai-approval-workflow/actions.yaml       # deployment-managed command/action allowlist
 /var/lib/ai-approval-workflow                # SQLite database and action queues
 ```
 
@@ -25,17 +25,17 @@ AAW_BIND_PORT=8787
 # Public base URL used when generating mobile approval links.
 AAW_PUBLIC_BASE_URL=https://approval.example.com
 
-# Private runtime data locations.
+# Runtime data locations.
 AAW_DATABASE_PATH=/var/lib/ai-approval-workflow/ai-approval-workflow.db
 AAW_WORKFLOWS_DIR=/etc/ai-approval-workflow/workflows
 AAW_SCHEDULER_ENABLED=true
 
-# Optional OpenAI-compatible AI endpoint. Keep API keys private.
+# Optional OpenAI-compatible AI endpoint. Store API keys in deployment-managed secrets.
 AAW_AI_BASE_URL=https://api.openai.com/v1
 AAW_AI_API_KEY=<set-in-secret-manager>
 AAW_AI_MODEL=gpt-4.1-mini
 
-# Notification adapter. Keep webhook URLs and bearer tokens private.
+# Notification adapter. Store webhook URLs and bearer tokens in deployment-managed secrets.
 AAW_NOTIFICATION_WEBHOOK_URL=https://notify.example.com/webhook
 AAW_NOTIFICATION_BEARER_TOKEN=<set-in-secret-manager>
 AAW_NOTIFICATION_CHANNEL=ops-default
@@ -46,7 +46,7 @@ AAW_ACTIONS_CONFIG_PATH=/etc/ai-approval-workflow/actions.yaml
 AAW_ACTION_QUEUE_DIR=/var/lib/ai-approval-workflow/actions
 ```
 
-Do not copy the example secrets above into git; use deployment-managed secrets instead.
+Do not commit environment files or deployment-managed secrets.
 
 ## Systemd service
 
@@ -70,7 +70,7 @@ WantedBy=multi-user.target
 
 ## Reverse proxy
 
-Protect admin routes with your SSO or VPN. Tokenized approval links may remain public if your token TTL and HTTPS setup are acceptable.
+Admin routes should be protected by SSO, VPN, or another trusted access layer. Tokenized approval links can remain public when HTTPS, token entropy, and token TTL meet the deployment's risk requirements.
 
 ```nginx
 location /admin {

@@ -43,9 +43,9 @@
     <path d="M664 82H1122M710 144H1122M638 206H1122M742 268H1122M690 330H1122" stroke="#87A6B5" stroke-width="1"/>
   </g>
 
-  <text class="title" x="68" y="94">AI tasks that wait</text>
-  <text class="title" x="68" y="154">for your approval</text>
-  <text class="sub" x="70" y="200">Schedule checks, summarize with AI, notify your phone,</text>
+  <text class="title" x="68" y="94">AI tasks with</text>
+  <text class="title" x="68" y="154">approval gates</text>
+  <text class="sub" x="70" y="200">Schedule checks, summarize with AI, send mobile alerts,</text>
   <text class="sub" x="70" y="228">and run only fixed allowlisted actions after a tap.</text>
 
   <g transform="translate(70 274)">

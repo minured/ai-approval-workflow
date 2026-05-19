@@ -1,6 +1,6 @@
 #!/bin/sh
 # Example mutating action for queued_action.
-# Copy to a private root-owned path and replace placeholders with your deployment commands.
+# Copy to a deployment-managed root-owned path and replace placeholders with deployment commands.
 set -eu
 
 REQUEST_PATH="${AAW_ACTION_REQUEST:-}"

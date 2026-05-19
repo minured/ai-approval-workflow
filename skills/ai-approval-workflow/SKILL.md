@@ -5,14 +5,14 @@ description: Use when creating, editing, deleting, validating, or deploying ai-a
 
 # ai-approval-workflow Skill
 
-Manage scheduled AI workflows for `ai-approval-workflow`. The product is not a chat bot: it runs scheduled tasks, sends notifications, and optionally asks the user for simple mobile approval choices.
+Manage scheduled AI workflows for `ai-approval-workflow`. The runtime executes scheduled tasks, sends notifications, and optionally creates simple mobile approval choices before allowlisted actions run.
 
 ## Guardrails
 
-- Before creating, editing, deleting, restarting, deploying, or upgrading framework capability, show the intended changes and ask for confirmation unless the user already confirmed this exact change.
-- Never print, commit, or write secrets into YAML. API keys, webhook URLs, bearer tokens, cookies, SSH credentials, and private base URLs belong in `.env` or deployment-managed config.
+- Before creating, editing, deleting, restarting, deploying, or upgrading framework capability, show the intended changes and request operator confirmation unless the exact change has already been approved.
+- Never print, commit, or write secrets into YAML. API keys, webhook URLs, bearer tokens, cookies, SSH credentials, and internal base URLs belong in `.env` or deployment-managed config.
 - Prefer soft delete: move YAML into `.deleted/` instead of permanent removal.
-- Admin web UI only views/deletes tasks; natural-language CRUD and capability planning happen here in Codex.
+- Admin web UI only views/deletes tasks; natural-language CRUD and capability planning are handled by this skill or another reviewed authoring process.
 - If timezone is ambiguous and timing matters, ask one short clarification. Otherwise follow the existing workflow timezone; for Chinese “早上/晚上” reminders, default to `Asia/Shanghai` unless the deployment has another documented default.
 
 ## Path conventions
@@ -34,7 +34,7 @@ Treat these as conventions. Inspect local files and environment before changing 
 | Existing DSL supports it | Create/edit/delete workflow YAML only. |
 | Existing steps can be combined | Compose YAML; do not change code. |
 | Missing reusable primitive | Propose a small framework capability upgrade first. |
-| Needs private business action | Keep core generic; add private allowlisted script/config. |
+| Needs deployment-specific action | Keep core generic; add operator-managed allowlisted script/config. |
 | Too bespoke or unsafe | Do not add to core; explain why and propose a safer adapter. |
 
 If capability is missing, follow [Capability Upgrade Policy](references/capability-upgrade-policy.md). For common reusable recipes, see [Workflow Patterns](references/workflow-patterns.md).
@@ -85,11 +85,11 @@ notify:
    ls -la "${AAW_WORKFLOWS_DIR:-./examples}"
    ```
 
-2. Convert the user request into either:
+2. Convert the request into either:
    - a YAML-only change; or
-   - a capability-upgrade proposal with generic core change + private adapter split.
+   - a capability-upgrade proposal with generic core change + deployment-specific adapter split.
 
-3. Show the diff or planned move and ask for confirmation.
+3. Show the diff or planned move and request confirmation.
 
 4. After confirmation, write the change and validate:
 
@@ -105,7 +105,7 @@ notify:
    curl -fsS https://approval.example.com/healthz
    ```
 
-6. If the user asks for a phone/status notification, use the deployment's notification helper or webhook without exposing its secret path or token.
+6. If a status notification is requested, use the deployment's notification helper or webhook without exposing secret paths or tokens.
 
 ## Production action notes
 
@@ -114,7 +114,7 @@ For privileged actions, do not put commands in workflow YAML. Use `command_check
 ## Natural-language mapping tips
 
 - “每天早上 9 点” -> cron `0 9 * * *` plus selected timezone.
-- “只通知我 / 不需要审批” -> use `notify` and no `approval`.
-- “需要我确认后再执行” -> include `approval`; only use allowlisted actions.
+- “只通知 / 不需要审批” -> use `notify` and no `approval`.
+- “确认后再执行” -> include `approval`; only use allowlisted actions.
 - “升级/不升级按钮” -> approval choices with values `approve` / `reject` and labels `升级` / `不升级`.
 - “删除任务” -> soft delete YAML and restart service if needed.
