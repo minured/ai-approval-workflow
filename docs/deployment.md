@@ -34,6 +34,8 @@ AAW_SCHEDULER_ENABLED=true
 AAW_AI_BASE_URL=https://api.openai.com/v1
 AAW_AI_API_KEY=<set-in-secret-manager>
 AAW_AI_MODEL=gpt-4.1-mini
+AAW_AI_TIMEOUT_SECONDS=60
+AAW_AI_FALLBACK_ENABLED=false
 
 # Notification adapter. Store webhook URLs and bearer tokens in deployment-managed secrets.
 AAW_NOTIFICATION_WEBHOOK_URL=https://notify.example.com/webhook
@@ -45,6 +47,9 @@ AAW_NOTIFICATION_SOURCE=ai-approval-workflow
 AAW_ACTIONS_CONFIG_PATH=/etc/ai-approval-workflow/actions.yaml
 AAW_ACTION_QUEUE_DIR=/var/lib/ai-approval-workflow/actions
 ```
+
+`AAW_AI_TIMEOUT_SECONDS` should be raised for workflows that summarize large fetched pages or command output.
+Set `AAW_AI_FALLBACK_ENABLED=false` in production when a workflow should fail instead of notifying raw source material if AI credentials are missing.
 
 Do not commit environment files or deployment-managed secrets.
 

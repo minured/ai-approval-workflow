@@ -27,6 +27,8 @@ class AppSettings(BaseSettings):
     ai_base_url: str = ""
     ai_api_key: str = ""
     ai_model: str = "gpt-4.1-mini"
+    ai_timeout_seconds: float = Field(default=30, ge=1)
+    ai_fallback_enabled: bool = True
     notification_webhook_url: str = ""
     notification_bearer_token: str = ""
     notification_channel: str = "ops-default"

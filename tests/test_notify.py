@@ -45,3 +45,15 @@ async def test_ai_client_uses_fallback_without_api_key():
     await client.aclose()
     assert "AI summary fallback" in summary
     assert "hello" in summary
+
+
+@pytest.mark.asyncio
+async def test_ai_client_can_disable_fallback_without_api_key():
+    """Production deployments can fail fast instead of notifying raw source text."""
+
+    client = AIClient(base_url="", api_key="", model="test-model", fallback_enabled=False)
+
+    with pytest.raises(ValueError, match="AI configuration is required"):
+        await client.summarize("private source material")
+
+    await client.aclose()

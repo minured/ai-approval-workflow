@@ -55,7 +55,13 @@ def create_runtime(settings: AppSettings) -> Runtime:
         bearer_token=settings.notification_bearer_token,
         source=settings.notification_source,
     )
-    ai = AIClient(base_url=settings.ai_base_url, api_key=settings.ai_api_key, model=settings.ai_model)
+    ai = AIClient(
+        base_url=settings.ai_base_url,
+        api_key=settings.ai_api_key,
+        model=settings.ai_model,
+        timeout_seconds=settings.ai_timeout_seconds,
+        fallback_enabled=settings.ai_fallback_enabled,
+    )
     command_registry = CommandRegistry(settings.actions_config_path)
     action_queue = ActionQueue(settings.action_queue_dir)
     engine = WorkflowEngine(

@@ -1,4 +1,4 @@
-"""OpenAI-compatible summarization client with offline fallback."""
+"""OpenAI-compatible summarization client with configurable fallback behavior."""
 
 from __future__ import annotations
 
@@ -14,18 +14,28 @@ class AIClient:
         base_url: str,
         api_key: str,
         model: str,
+        timeout_seconds: float = 30,
+        fallback_enabled: bool = True,
         http_client: httpx.AsyncClient | None = None,
     ):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key.strip()
         self.model = model
-        self.http_client = http_client or httpx.AsyncClient(timeout=30)
+        # Keep the timeout visible for diagnostics and tests; production
+        # deployments can raise it for longer summaries without code changes.
+        self.timeout_seconds = timeout_seconds
+        # Local demos can use deterministic fallback text, while production
+        # deployments can disable it to avoid sending raw source material.
+        self.fallback_enabled = fallback_enabled
+        self.http_client = http_client or httpx.AsyncClient(timeout=timeout_seconds)
 
     async def summarize(self, text: str) -> str:
         """Summarize text with AI, or return deterministic fallback text."""
 
         clean = text.strip()
         if not self.base_url or not self.api_key:
+            if not self.fallback_enabled:
+                raise ValueError("AI configuration is required but AAW_AI_BASE_URL or AAW_AI_API_KEY is missing.")
             return f"AI summary fallback: {clean[:500]}"
 
         response = await self.http_client.post(

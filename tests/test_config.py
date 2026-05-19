@@ -10,6 +10,20 @@ def test_settings_defaults_use_local_safe_values(monkeypatch):
     settings = AppSettings(_env_file=None)
     assert settings.public_base_url == "http://127.0.0.1:8787"
     assert settings.notification_channel == "ops-default"
+    assert settings.ai_timeout_seconds == 30
+    assert settings.ai_fallback_enabled is True
+
+
+def test_settings_load_ai_timeout_and_fallback_flags(monkeypatch):
+    """AI timeout and fallback behavior are deployment configuration, not code."""
+
+    monkeypatch.setenv("AAW_AI_TIMEOUT_SECONDS", "90")
+    monkeypatch.setenv("AAW_AI_FALLBACK_ENABLED", "false")
+
+    settings = AppSettings(_env_file=None)
+
+    assert settings.ai_timeout_seconds == 90
+    assert settings.ai_fallback_enabled is False
 
 
 def test_load_workflow_file_parses_demo_config(tmp_path: Path):
