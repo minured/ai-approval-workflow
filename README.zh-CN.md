@@ -2,23 +2,71 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+![ai-approval-workflow hero](docs/assets/hero.svg)
+
 开源的定时 AI 工作流运行时，重点支持手机端轻量审批。
 
-它围绕两个核心交互设计：
+`ai-approval-workflow` 适合这类重复任务：
 
-1. **定时 AI 任务**：按 cron 触发，收集上下文，让 AI 总结，然后通知你；
-2. **手机人工审批**：在执行白名单动作前，发送一个短审批链接，让你用 Execute / Skip / Snooze 或自定义按钮做简单选择。
+```text
+某件事需要定期检查
+  -> AI 可以阅读并总结结果
+  -> 你只希望在需要决策时被打扰
+  -> 真正执行动作必须是固定、可审查、白名单的
+```
 
 这个项目刻意**不是**聊天机器人，也**不是**可视化工作流搭建器。自然语言创建、编辑、删除任务由内置 Codex skill 处理；skill 会生成可审查的 YAML 工作流文件。
 
-## 包含什么
+## 为什么需要它
 
-- FastAPI 运行时：健康检查、审批页、管理页和 API。
-- APScheduler：从 YAML 工作流注册 cron 定时任务。
-- 通用 webhook 通知：可接 WeChat、WeCom、Slack、Discord 或你自己的通知适配器。
-- 手机审批页：稳定的决策值和可自定义按钮文案。
-- 安全动作边界：工作流只引用命名 command/action，真正命令放在私有白名单配置里。
-- Codex skill：支持自然语言工作流 CRUD，以及克制的通用框架能力升级。
+很多自动化工具要么太沉默，要么太危险：
+
+- cron 任务会执行，但上下文不足；
+- 聊天机器人让简单决策也变成长对话；
+- 如果 AI agent 能直接执行任意命令，风险很高；
+- 人也不想每天盯着另一个 dashboard。
+
+这个项目保留中间最实用的部分：**定时 AI 摘要 + 手机简单审批 + 固定白名单动作**。
+
+## 它能做什么
+
+- 从 YAML cron 定义运行定时 AI 任务。
+- 抓取公开页面，或运行命名的只读检查。
+- 把长输出总结成适合手机阅读的短消息。
+- 用简单按钮发起手机审批，例如 Upgrade / Skip。
+- 将审批通过的动作写入队列，由 root-side runner 再次校验 action 名称。
+- 提供小型管理页，用于查看和软删除任务。
+- 通过 Codex skill 把自然语言转换成可审查的 workflow YAML。
+
+## 工作原理
+
+![Architecture diagram](docs/assets/architecture.svg)
+
+公开仓库只包含通用框架。你的私有部署把 secret、生产 workflow、action 白名单、脚本和数据库放在 git 外部。
+
+![Workflow lifecycle](docs/assets/workflow-lifecycle.svg)
+
+## 产品界面
+
+手机审批：
+
+![Mobile approval mockup](docs/assets/mobile-approval-mock.svg)
+
+管理页：
+
+![Admin dashboard mockup](docs/assets/admin-dashboard-mock.svg)
+
+## 真实使用场景
+
+- **GitHub Trending 摘要：** 每天早上总结值得关注的仓库。
+- **服务升级检查：** 检查版本和已知问题，再问你是否升级。
+- **证书/域名过期提醒：** 在重要资源过期前提醒。
+- **备份健康报告：** 把原始备份日志变成每周风险摘要。
+- **CI 失败归因：** 聚合失败原因并提示下一步动作。
+- **账单/订阅变化：** 总结异常支出或即将续费项目。
+- **生活便利任务：** 商品降价、旅行风险、政策更新、家庭服务器健康检查。
+
+更多具体例子见 [使用场景](docs/use-cases.zh-CN.md)，其中包含一个脱敏的真实升级审批案例。
 
 ## 快速开始
 
@@ -89,6 +137,7 @@ skill 应该把私有主机名、token、脚本和生产工作流文件保留在
 
 ## 文档
 
+- [使用场景](docs/use-cases.zh-CN.md)
 - [Design](docs/design.md)
 - [Security Model](docs/security.md)
 - [Deployment](docs/deployment.md)

@@ -1,0 +1,95 @@
+<!--
+  Architecture diagram for ai-approval-workflow.
+  Public-safe SVG: uses generic service names and placeholder infrastructure.
+-->
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ai-approval-workflow architecture</title>
+  <desc id="desc">Codex writes YAML workflows, the runtime schedules and executes safe steps, phone approvals gate allowlisted actions.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7FBFA"/>
+      <stop offset="1" stop-color="#ECF4F1"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#1D352E" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2L10 6L2 10" fill="none" stroke="#27666E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .h1{font:800 34px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#16322F;letter-spacing:-0.8px}
+      .h2{font:800 20px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#173B3F}
+      .body{font:600 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#476264}
+      .tiny{font:600 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#6D8584}
+      .mono{font:700 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#1B6775}
+      .box{fill:white;stroke:#D6E5E1;stroke-width:1.5}
+      .private{fill:#FFF9EE;stroke:#F0D9A8;stroke-width:1.5;stroke-dasharray:7 7}
+      .edge{stroke:#27666E;stroke-width:2.2;marker-end:url(#arrow);fill:none}
+    </style>
+  </defs>
+  <rect width="1200" height="700" rx="32" fill="url(#paper)"/>
+  <text class="h1" x="64" y="70">Architecture: schedules, summaries, approvals, safe actions</text>
+  <text class="body" x="66" y="100">Public framework code stays generic. Private workflows, secrets, and scripts live in deployment config.</text>
+
+  <g filter="url(#shadow)">
+    <rect class="box" x="72" y="155" width="218" height="118" rx="24"/>
+    <text class="h2" x="100" y="195">Natural language</text>
+    <text class="body" x="100" y="223">Codex skill converts intent</text>
+    <text class="body" x="100" y="246">into reviewed YAML.</text>
+    <text class="mono" x="100" y="270">“daily digest at 9”</text>
+
+    <rect class="box" x="388" y="155" width="218" height="118" rx="24"/>
+    <text class="h2" x="416" y="195">Workflow YAML</text>
+    <text class="body" x="416" y="223">Schedule, steps, prompt,</text>
+    <text class="body" x="416" y="246">channel, approval labels.</text>
+    <text class="mono" x="416" y="270">github-trending.yaml</text>
+
+    <rect class="box" x="704" y="155" width="218" height="118" rx="24"/>
+    <text class="h2" x="732" y="195">Runtime</text>
+    <text class="body" x="732" y="223">FastAPI + APScheduler</text>
+    <text class="body" x="732" y="246">runs safe step types.</text>
+    <text class="mono" x="732" y="270">http_fetch → ai_summary</text>
+
+    <rect class="box" x="704" y="380" width="218" height="118" rx="24"/>
+    <text class="h2" x="732" y="420">Mobile approval</text>
+    <text class="body" x="732" y="448">Tokenized approval link</text>
+    <text class="body" x="732" y="471">with simple choices.</text>
+    <text class="mono" x="732" y="495">approve / reject</text>
+
+    <rect class="box" x="388" y="380" width="218" height="118" rx="24"/>
+    <text class="h2" x="416" y="420">Notification</text>
+    <text class="body" x="416" y="448">Generic webhook adapter</text>
+    <text class="body" x="416" y="471">for phone messages.</text>
+    <text class="mono" x="416" y="495">title + content</text>
+
+    <rect class="private" x="76" y="380" width="214" height="160" rx="24"/>
+    <text class="h2" x="104" y="420">Private overlay</text>
+    <text class="body" x="104" y="448">.env, workflows,</text>
+    <text class="body" x="104" y="471">allowlist, scripts, DB.</text>
+    <text class="tiny" x="104" y="506">Not committed to public git</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="box" x="976" y="242" width="160" height="178" rx="26"/>
+    <text class="h2" x="1004" y="284">Root runner</text>
+    <text class="body" x="1004" y="315">Validates action</text>
+    <text class="body" x="1004" y="338">names again, then</text>
+    <text class="body" x="1004" y="361">runs fixed scripts.</text>
+    <text class="mono" x="1004" y="396">allowlist only</text>
+  </g>
+
+  <path class="edge" d="M290 214H382"/>
+  <path class="edge" d="M606 214H698"/>
+  <path class="edge" d="M812 274V372"/>
+  <path class="edge" d="M704 438H612"/>
+  <path class="edge" d="M497 380V280"/>
+  <path class="edge" d="M922 438C968 438 984 416 996 398"/>
+  <path class="edge" d="M290 460H382"/>
+
+  <g transform="translate(84 592)">
+    <circle cx="12" cy="12" r="8" fill="#27666E"/>
+    <text class="tiny" x="30" y="17">AI summarizes and recommends, but never generates shell commands.</text>
+    <circle cx="430" cy="12" r="8" fill="#F0BF55"/>
+    <text class="tiny" x="448" y="17">Mutating actions require a human decision and a root-owned allowlist.</text>
+  </g>
+</svg>

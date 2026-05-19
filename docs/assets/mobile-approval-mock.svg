@@ -1,0 +1,65 @@
+<!--
+  Mobile approval mockup for ai-approval-workflow.
+  Public-safe SVG: all service names and messages are generic examples.
+-->
+<svg width="1000" height="680" viewBox="0 0 1000 680" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Mobile approval mockup</title>
+  <desc id="desc">A phone notification links to a mobile approval page with upgrade and skip buttons.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1000" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EEF7F3"/>
+      <stop offset="1" stop-color="#DDEAE8"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="20" stdDeviation="28" flood-color="#15322E" flood-opacity="0.22"/>
+    </filter>
+    <style>
+      .title{font:800 34px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#143331;letter-spacing:-0.7px}
+      .body{font:600 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#526B68}
+      .small{font:600 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#7A908D}
+      .label{font:800 17px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#19322F}
+      .mono{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#23727C}
+    </style>
+  </defs>
+  <rect width="1000" height="680" rx="32" fill="url(#bg)"/>
+  <text class="title" x="70" y="78">Mobile approval in two taps</text>
+  <text class="body" x="72" y="108">The phone message stays short. The approval page carries the summary, risk, and fixed choices.</text>
+
+  <g transform="translate(116 158)" filter="url(#shadow)">
+    <rect width="302" height="456" rx="44" fill="#0D1517"/>
+    <rect x="22" y="24" width="258" height="408" rx="32" fill="#132124"/>
+    <rect x="100" y="42" width="98" height="14" rx="7" fill="#314245"/>
+    <text x="46" y="86" font-family="ui-sans-serif,system-ui" font-size="16" font-weight="800" fill="#E7F3F0">Notifications</text>
+    <rect x="42" y="112" width="218" height="140" rx="24" fill="#1D3034" stroke="#385156"/>
+    <circle cx="66" cy="144" r="12" fill="#8DF06B"/>
+    <text x="88" y="149" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="800" fill="#F1FAF7">AI Approval</text>
+    <text x="62" y="184" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="650" fill="#C7D8D4">Service update found</text>
+    <text x="62" y="208" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="600" fill="#8EA29E">AI recommends review before</text>
+    <text x="62" y="226" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="600" fill="#8EA29E">running the upgrade.</text>
+    <rect x="42" y="278" width="218" height="48" rx="16" fill="#263B3F"/>
+    <text x="62" y="308" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="800" fill="#EAF5F1">Open approval link</text>
+    <text x="72" y="374" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="12" font-weight="700" fill="#6FC6D6">notify → summary → tap</text>
+  </g>
+
+  <g transform="translate(576 104)" filter="url(#shadow)">
+    <rect width="318" height="520" rx="46" fill="#0E151A"/>
+    <rect x="24" y="24" width="270" height="472" rx="34" fill="#F9FBF8"/>
+    <rect x="110" y="42" width="98" height="12" rx="6" fill="#D5E0DD"/>
+    <text class="label" x="52" y="94">Service upgrade approval</text>
+    <rect x="52" y="118" width="218" height="110" rx="22" fill="#EEF7F3" stroke="#D5E6E0"/>
+    <text class="body" x="70" y="150">Current: v1.0.0</text>
+    <text class="body" x="70" y="176">Latest: v1.1.0</text>
+    <text class="body" x="70" y="202">Risk: medium</text>
+    <text class="small" x="52" y="270">AI summary</text>
+    <text class="body" x="52" y="296">Minor release with useful fixes.</text>
+    <text class="body" x="52" y="320">No blocking incidents found in</text>
+    <text class="body" x="52" y="344">public issue reports.</text>
+    <rect x="52" y="386" width="100" height="52" rx="18" fill="#9AE66E"/>
+    <text x="80" y="418" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="900" fill="#193018">Upgrade</text>
+    <rect x="170" y="386" width="100" height="52" rx="18" fill="#ECF1EF" stroke="#D2DEDA"/>
+    <text x="204" y="418" font-family="ui-sans-serif,system-ui" font-size="15" font-weight="800" fill="#526B68">Skip</text>
+    <text class="mono" x="68" y="468">token expires automatically</text>
+  </g>
+
+  <path d="M448 378C490 378 508 338 546 338" stroke="#2E7E88" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 10"/>
+</svg>

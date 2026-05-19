@@ -2,23 +2,71 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+![ai-approval-workflow hero](docs/assets/hero.svg)
+
 Open-source scheduled AI workflow runtime with mobile-first approvals.
 
-It is built for two core interactions:
+`ai-approval-workflow` is for repetitive work that follows this pattern:
 
-1. **scheduled AI tasks**: run on cron, collect context, summarize with AI, and notify you;
-2. **human approval from phone**: send a short approval link with simple choices such as Execute / Skip / Snooze before an allowlisted action runs.
+```text
+something should be checked regularly
+  -> AI can read and summarize the result
+  -> you only want to be interrupted when a decision is needed
+  -> any real action must be fixed, reviewed, and allowlisted
+```
 
-The project is intentionally **not** a chat bot and **not** a visual workflow builder. Natural-language task creation/editing/deletion is handled by the bundled Codex skill, which writes reviewable YAML workflow files.
+It is intentionally **not** a chat bot and **not** a visual workflow builder. Natural-language task creation/editing/deletion is handled by the bundled Codex skill, which writes reviewable YAML workflow files.
 
-## What is included
+## Why this exists
 
-- FastAPI runtime for health checks, approval pages, admin pages, and APIs.
-- APScheduler cron registration from YAML workflow files.
-- Generic webhook notifications for WeChat, WeCom, Slack, Discord, or any adapter service.
-- Mobile approval pages with stable decision values and custom button labels.
-- Safe action boundary: workflows reference named commands/actions, while fixed commands live in private allowlist config.
-- Codex skill for natural-language workflow CRUD and conservative framework capability upgrades.
+Most automation tools are either too silent or too dangerous:
+
+- cron jobs run without enough context;
+- chat bots require long conversations for simple decisions;
+- AI agents can be risky if they directly execute arbitrary commands;
+- human reviewers do not want another dashboard to monitor all day.
+
+This project keeps the useful middle ground: **scheduled AI summaries + simple phone approval + fixed allowlisted actions**.
+
+## What it can do
+
+- Run scheduled AI tasks from YAML cron definitions.
+- Fetch public pages or run named read-only checks.
+- Summarize long output into short phone-friendly messages.
+- Ask for mobile approval with simple buttons such as Upgrade / Skip.
+- Queue approved actions for a root-side runner that validates names again.
+- Provide a small admin page for viewing and soft-deleting configured tasks.
+- Let a Codex skill convert natural language into reviewed workflow YAML.
+
+## How it works
+
+![Architecture diagram](docs/assets/architecture.svg)
+
+The public repository contains the generic framework. Your private deployment keeps secrets, production workflows, action allowlists, scripts, and databases outside git.
+
+![Workflow lifecycle](docs/assets/workflow-lifecycle.svg)
+
+## Product surfaces
+
+Mobile approval:
+
+![Mobile approval mockup](docs/assets/mobile-approval-mock.svg)
+
+Admin page:
+
+![Admin dashboard mockup](docs/assets/admin-dashboard-mock.svg)
+
+## Real-world use cases
+
+- **GitHub Trending digest:** summarize interesting repositories every morning.
+- **Service upgrade review:** check versions and known issues, then ask whether to upgrade.
+- **Certificate/domain expiry watcher:** notify before something important expires.
+- **Backup health report:** turn raw backup logs into a weekly risk summary.
+- **CI failure triage:** group failures and suggest the next action.
+- **Billing/subscription drift:** summarize unusual spend or upcoming renewals.
+- **Personal convenience tasks:** price drops, travel disruption summaries, policy updates, and home server health.
+
+See [Use Cases](docs/use-cases.md) for concrete examples, including a sanitized real-world upgrade approval case.
 
 ## Quick start
 
@@ -89,6 +137,7 @@ See [Private Overlay](docs/private-overlay.md) and [Publishing Checklist](docs/p
 
 ## Documentation
 
+- [Use Cases](docs/use-cases.md)
 - [Design](docs/design.md)
 - [Security Model](docs/security.md)
 - [Deployment](docs/deployment.md)

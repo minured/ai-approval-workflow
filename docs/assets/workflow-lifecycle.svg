@@ -1,0 +1,95 @@
+<!--
+  Workflow lifecycle diagram for ai-approval-workflow.
+  Public-safe SVG: shows generic states and no deployment-specific data.
+-->
+<svg width="1200" height="520" viewBox="0 0 1200 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Workflow lifecycle</title>
+  <desc id="desc">A lifecycle from schedule trigger through AI summary, notification, approval, queued action, and audit record.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#17251D"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2L10 6L2 10" fill="none" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title{font:800 34px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#F8FAFC;letter-spacing:-0.7px}
+      .label{font:800 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#F8FAFC}
+      .body{font:600 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;fill:#B7C8CE}
+      .mono{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#A7F3D0}
+      .node{fill:#152332;stroke:#33475A;stroke-width:1.4}
+      .edge{stroke:#A7F3D0;stroke-width:2.2;marker-end:url(#arrow);fill:none}
+    </style>
+  </defs>
+  <rect width="1200" height="520" rx="32" fill="url(#bg)"/>
+  <text class="title" x="64" y="72">Workflow lifecycle</text>
+  <text class="body" x="66" y="101">Most tasks only notify. Risky tasks pause for a tap before any fixed action is queued.</text>
+
+  <path d="M138 260H1064" stroke="#33475A" stroke-width="2" stroke-dasharray="8 12"/>
+
+  <g filter="url(#shadow)">
+    <g transform="translate(64 170)">
+      <rect class="node" width="158" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#60A5FA"/>
+      <text class="label" x="58" y="43">Schedule</text>
+      <text class="body" x="28" y="78">Cron fires at a</text>
+      <text class="body" x="28" y="100">predictable time.</text>
+      <text class="mono" x="28" y="126">0 9 * * *</text>
+    </g>
+    <g transform="translate(258 170)">
+      <rect class="node" width="158" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#38BDF8"/>
+      <text class="label" x="58" y="43">Collect</text>
+      <text class="body" x="28" y="78">Fetch public data</text>
+      <text class="body" x="28" y="100">or run a check.</text>
+      <text class="mono" x="28" y="126">http_fetch</text>
+    </g>
+    <g transform="translate(452 170)">
+      <rect class="node" width="158" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#A7F3D0"/>
+      <text class="label" x="58" y="43">Summarize</text>
+      <text class="body" x="28" y="78">AI compresses</text>
+      <text class="body" x="28" y="100">context and risk.</text>
+      <text class="mono" x="28" y="126">ai_summary</text>
+    </g>
+    <g transform="translate(646 170)">
+      <rect class="node" width="158" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#FBBF24"/>
+      <text class="label" x="58" y="43">Decide</text>
+      <text class="body" x="28" y="78">Notify only or</text>
+      <text class="body" x="28" y="100">ask approval.</text>
+      <text class="mono" x="28" y="126">approval?</text>
+    </g>
+    <g transform="translate(840 170)">
+      <rect class="node" width="158" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#FB7185"/>
+      <text class="label" x="58" y="43">Queue</text>
+      <text class="body" x="28" y="78">Approved actions</text>
+      <text class="body" x="28" y="100">become JSON.</text>
+      <text class="mono" x="28" y="126">queued_action</text>
+    </g>
+    <g transform="translate(1034 170)">
+      <rect class="node" width="102" height="138" rx="24"/>
+      <circle cx="36" cy="38" r="14" fill="#C084FC"/>
+      <text class="label" x="28" y="78">Audit</text>
+      <text class="body" x="28" y="102">Record</text>
+      <text class="mono" x="28" y="126">SQLite</text>
+    </g>
+  </g>
+
+  <path class="edge" d="M222 239H252"/>
+  <path class="edge" d="M416 239H446"/>
+  <path class="edge" d="M610 239H640"/>
+  <path class="edge" d="M804 239H834"/>
+  <path class="edge" d="M998 239H1028"/>
+
+  <g transform="translate(270 374)">
+    <rect x="0" y="0" width="660" height="62" rx="20" fill="#0F1E2A" stroke="#2F4354"/>
+    <text class="body" x="28" y="26">Notify-only path: schedule → collect → summarize → notify → audit</text>
+    <text class="body" x="28" y="47">Approval path: schedule → collect → summarize → phone choice → queued fixed action → audit</text>
+  </g>
+</svg>
