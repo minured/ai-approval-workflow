@@ -1,5 +1,7 @@
 # ai-approval-workflow
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 Open-source scheduled AI workflow runtime with mobile-first approvals.
 
 It is built for two core interactions:
