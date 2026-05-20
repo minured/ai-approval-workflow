@@ -83,8 +83,8 @@ class WorkflowEngine:
                 self.store.update_run_status(approval.run_id, RunStatus.COMPLETED, action_result)
                 self.store.append_event("run", approval.run_id, "action_queued", action_result)
                 await self.notifier.send(
-                    title="AI approval queued",
-                    content=f"Approval {approval.approval_id} queued action {action_result.get('action')}.",
+                    title="审批已确认",
+                    content="已收到审批，动作已加入执行队列。完成后会通知结果。",
                     channel=str(approval.details.get("channel") or "ops-default"),
                     severity="info",
                 )
@@ -93,8 +93,8 @@ class WorkflowEngine:
             self.store.update_run_status(approval.run_id, RunStatus.COMPLETED, action_result)
             self.store.append_event("run", approval.run_id, "action_completed", action_result)
             await self.notifier.send(
-                title="AI approval completed",
-                content=f"Approval {approval.approval_id} executed successfully.",
+                title="审批动作执行成功",
+                content="审批动作执行成功。",
                 channel=str(approval.details.get("channel") or "ops-default"),
                 severity="info",
             )
@@ -103,8 +103,8 @@ class WorkflowEngine:
         if approval.status == ApprovalStatus.REJECTED:
             self.store.update_run_status(approval.run_id, RunStatus.SKIPPED, {"approval_id": approval.approval_id})
             await self.notifier.send(
-                title="AI approval skipped",
-                content=f"Approval {approval.approval_id} was skipped.",
+                title="审批已取消",
+                content="已收到选择，本次动作不会执行。",
                 channel=str(approval.details.get("channel") or "ops-default"),
                 severity="info",
             )
@@ -117,8 +117,8 @@ class WorkflowEngine:
                 {"approval_id": approval.approval_id, "snooze_seconds": self.snooze_seconds},
             )
             await self.notifier.send(
-                title="AI approval snoozed",
-                content=f"Approval {approval.approval_id} was snoozed for {self.snooze_seconds} seconds.",
+                title="审批已稍后提醒",
+                content=f"已收到选择，将在 {self.snooze_seconds} 秒后再提醒。",
                 channel=str(approval.details.get("channel") or "ops-default"),
                 severity="info",
             )

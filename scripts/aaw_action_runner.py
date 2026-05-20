@@ -12,7 +12,6 @@ import json
 import os
 import re
 import subprocess
-import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -91,18 +90,23 @@ def _notify(config: dict[str, Any], envelope: dict[str, Any]) -> None:
         return
 
     result = envelope.get("result") or {}
-    status = "成功" if result.get("returncode") == 0 else "失败"
-    title = f"AI审批动作{status}: {envelope.get('action')}"
-    body = "\n".join(
-        [
-            f"request_id: {envelope.get('request_id')}",
-            f"workflow: {envelope.get('workflow_id')}",
-            f"returncode: {result.get('returncode')}",
-            "",
-            str(result.get("stdout") or result.get("stderr") or "")[-3500:],
-        ]
-    )
+    if result.get("returncode") == 0:
+        title = "审批动作执行成功"
+        body = "审批动作执行成功。"
+    else:
+        title = "审批动作执行失败"
+        body = f"审批动作执行失败：{_error_summary(result)}"
     subprocess.run([*notify_command, title, body], check=False, timeout=60)
+
+
+def _error_summary(result: dict[str, Any]) -> str:
+    """Return a concise failure reason for mobile notifications."""
+
+    raw = str(result.get("stderr") or result.get("stdout") or "").strip()
+    if not raw:
+        raw = f"退出码 {result.get('returncode')}"
+    compact = re.sub(r"\s+", " ", raw)
+    return compact[-500:]
 
 
 def _load_config(config_path: str | Path) -> dict[str, Any]:

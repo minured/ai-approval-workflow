@@ -12,7 +12,7 @@ def test_settings_defaults_use_local_safe_values(monkeypatch):
     assert settings.notification_channel == "ops-default"
     assert settings.ai_timeout_seconds == 30
     assert settings.ai_fallback_enabled is True
-    assert settings.message_max_chars == 100
+    assert settings.message_max_chars == 300
 
 
 def test_settings_load_ai_timeout_and_fallback_flags(monkeypatch):

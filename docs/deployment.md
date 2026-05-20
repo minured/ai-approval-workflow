@@ -36,7 +36,7 @@ AAW_AI_API_KEY=<set-in-secret-manager>
 AAW_AI_MODEL=gpt-4.1-mini
 AAW_AI_TIMEOUT_SECONDS=60
 AAW_AI_FALLBACK_ENABLED=false
-AAW_MESSAGE_MAX_CHARS=100
+AAW_MESSAGE_MAX_CHARS=300
 
 # Notification adapter. Store webhook URLs and bearer tokens in deployment-managed secrets.
 AAW_NOTIFICATION_WEBHOOK_URL=https://notify.example.com/webhook

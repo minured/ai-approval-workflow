@@ -257,6 +257,8 @@ async def test_approved_queued_action_writes_action_request(tmp_path):
     pending = list((action_queue.queue_dir / "pending").glob("*.json"))
     assert result["status"] == "queued"
     assert len(pending) == 1
+    assert _notifier.messages[-1]["title"] == "审批已确认"
+    assert _notifier.messages[-1]["content"] == "已收到审批，动作已加入执行队列。完成后会通知结果。"
     queued_payload = json.loads(pending[0].read_text(encoding="utf-8"))
     assert queued_payload["action"] == "service_bundle_upgrade"
     assert queued_payload["run_id"] == run_id
