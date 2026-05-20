@@ -16,9 +16,11 @@ class RecordingAI:
 
     def __init__(self):
         self.inputs = []
+        self.max_chars = []
 
-    async def summarize(self, text: str) -> str:
+    async def summarize(self, text: str, max_chars: int | None = None) -> str:
         self.inputs.append(text)
+        self.max_chars.append(max_chars)
         return f"AI summary: {text[:80]}"
 
 
@@ -46,6 +48,25 @@ def make_engine(tmp_path, *, http_client=None):
         approval_ttl_seconds=1800,
         snooze_seconds=1800,
         http_client=http_client,
+    )
+    return engine, ai, notifier
+
+
+def make_limited_engine(tmp_path, *, message_max_chars: int):
+    """Create an engine with a configured outbound AI message limit."""
+
+    store = SQLiteStore(tmp_path / "app.db")
+    store.init_db()
+    ai = RecordingAI()
+    notifier = RecordingNotifier()
+    engine = WorkflowEngine(
+        store=store,
+        approvals=ApprovalService(store, public_base_url="http://testserver"),
+        notifier=notifier,
+        ai=ai,
+        approval_ttl_seconds=1800,
+        snooze_seconds=1800,
+        message_max_chars=message_max_chars,
     )
     return engine, ai, notifier
 
@@ -113,6 +134,30 @@ async def test_http_fetch_step_feeds_response_body_to_ai_summary(tmp_path):
     assert str(requests[0].url) == "https://example.com/trending"
     assert "repo-a 100 stars" in ai.inputs[0]
     assert notifier.messages[0]["title"] == "GitHub Trending"
+
+
+@pytest.mark.asyncio
+async def test_ai_summary_step_passes_message_limit_to_ai_client(tmp_path):
+    """Workflow summaries should generate within the configured notification budget."""
+
+    engine, ai, _notifier = make_limited_engine(tmp_path, message_max_chars=25)
+    workflow = WorkflowDefinition(
+        id="limited-summary",
+        enabled=True,
+        trigger={"type": "schedule", "cron": "0 9 * * *", "timezone": "UTC"},
+        steps=[
+            WorkflowStep(id="collect", type="demo_summary", config={"subject": "Daily"}),
+            WorkflowStep(id="summarize", type="ai_summary", config={"prompt": "请简洁总结"}),
+            WorkflowStep(id="notify", type="notify", config={"title": "Daily summary"}),
+        ],
+        notify={"channel": "ops-default"},
+    )
+
+    result = await engine.run(workflow)
+    await engine.aclose()
+
+    assert result["status"] == "completed"
+    assert ai.max_chars == [25]
 
 from ai_approval_workflow.actions import ActionQueue, CommandResult
 

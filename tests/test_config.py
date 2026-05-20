@@ -12,6 +12,7 @@ def test_settings_defaults_use_local_safe_values(monkeypatch):
     assert settings.notification_channel == "ops-default"
     assert settings.ai_timeout_seconds == 30
     assert settings.ai_fallback_enabled is True
+    assert settings.message_max_chars == 100
 
 
 def test_settings_load_ai_timeout_and_fallback_flags(monkeypatch):
@@ -24,6 +25,16 @@ def test_settings_load_ai_timeout_and_fallback_flags(monkeypatch):
 
     assert settings.ai_timeout_seconds == 90
     assert settings.ai_fallback_enabled is False
+
+
+def test_settings_load_message_max_chars(monkeypatch):
+    """Outbound AI message length is configurable per deployment."""
+
+    monkeypatch.setenv("AAW_MESSAGE_MAX_CHARS", "42")
+
+    settings = AppSettings(_env_file=None)
+
+    assert settings.message_max_chars == 42
 
 
 def test_load_workflow_file_parses_demo_config(tmp_path: Path):

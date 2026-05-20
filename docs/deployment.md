@@ -36,6 +36,7 @@ AAW_AI_API_KEY=<set-in-secret-manager>
 AAW_AI_MODEL=gpt-4.1-mini
 AAW_AI_TIMEOUT_SECONDS=60
 AAW_AI_FALLBACK_ENABLED=false
+AAW_MESSAGE_MAX_CHARS=100
 
 # Notification adapter. Store webhook URLs and bearer tokens in deployment-managed secrets.
 AAW_NOTIFICATION_WEBHOOK_URL=https://notify.example.com/webhook
@@ -50,6 +51,7 @@ AAW_ACTION_QUEUE_DIR=/var/lib/ai-approval-workflow/actions
 
 `AAW_AI_TIMEOUT_SECONDS` should be raised for workflows that summarize large fetched pages or command output.
 Set `AAW_AI_FALLBACK_ENABLED=false` in production when a workflow should fail instead of notifying raw source material if AI credentials are missing.
+`AAW_MESSAGE_MAX_CHARS` limits AI-generated message bodies used for notifications or approval summaries. The runtime instructs the model to stay within the budget and only clamps as a last resort.
 
 Do not commit environment files or deployment-managed secrets.
 

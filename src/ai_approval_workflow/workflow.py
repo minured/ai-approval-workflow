@@ -7,7 +7,7 @@ from typing import Any
 import httpx
 
 from .actions import ActionQueue, CommandRegistry
-from .ai import AIClient
+from .ai import AIClient, clamp_text, normalize_max_chars
 from .approvals import ApprovalService
 from .domain import ApprovalRecord, ApprovalStatus, RunStatus, WorkflowDefinition, WorkflowStep
 from .notify import NotificationClient
@@ -30,6 +30,7 @@ class WorkflowEngine:
         http_client: httpx.AsyncClient | None = None,
         command_registry: CommandRegistry | None = None,
         action_queue: ActionQueue | None = None,
+        message_max_chars: int = 0,
     ):
         self.store = store
         self.approvals = approvals
@@ -40,6 +41,7 @@ class WorkflowEngine:
         self.http_client = http_client or httpx.AsyncClient(timeout=30, follow_redirects=True)
         self.command_registry = command_registry
         self.action_queue = action_queue
+        self.message_max_chars = normalize_max_chars(message_max_chars)
 
     async def aclose(self) -> None:
         """Close HTTP resources owned by generic workflow steps."""
@@ -152,7 +154,10 @@ class WorkflowEngine:
             return
 
         if step.type == "ai_summary":
-            context["ai_summary"] = await self.ai.summarize(self._build_ai_input(step, context))
+            context["ai_summary"] = await self.ai.summarize(
+                self._build_ai_input(step, context),
+                max_chars=self.message_max_chars or None,
+            )
             return
 
         if step.type == "notify":
@@ -163,6 +168,10 @@ class WorkflowEngine:
                 or context.get("task", {}).get("summary")
                 or "Workflow completed."
             )
+            if context.get("ai_summary") and content == context.get("ai_summary"):
+                # The AI client should already honor the budget. This is only a
+                # last-resort guard against models that ignore both attempts.
+                content = clamp_text(content, self.message_max_chars)
             context["notification"] = await self.notifier.send(
                 title=str(step.config.get("title") or workflow.id),
                 content=content,
@@ -174,6 +183,8 @@ class WorkflowEngine:
         if step.type == "approval":
             channel = str(workflow.notify.get("channel") or "ops-default")
             summary = str(context.get("ai_summary") or context.get("task", {}).get("summary") or "Approval requested")
+            if context.get("ai_summary") and summary == context.get("ai_summary"):
+                summary = clamp_text(summary, self.message_max_chars)
             created = self.approvals.create_pending(
                 run_id=context["run_id"],
                 title=str(step.config.get("title") or "AI approval"),

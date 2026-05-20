@@ -73,6 +73,7 @@ def create_runtime(settings: AppSettings) -> Runtime:
         snooze_seconds=settings.snooze_seconds,
         command_registry=command_registry,
         action_queue=action_queue,
+        message_max_chars=settings.message_max_chars,
     )
     scheduler = None
     if settings.scheduler_enabled:

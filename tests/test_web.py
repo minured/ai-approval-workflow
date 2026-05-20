@@ -19,12 +19,14 @@ def test_create_app_passes_ai_runtime_settings(tmp_path):
         workflows_dir=str(tmp_path / "workflows"),
         ai_timeout_seconds=75,
         ai_fallback_enabled=False,
+        message_max_chars=42,
     )
 
     app = create_app(settings)
 
     assert app.state.runtime.ai.timeout_seconds == 75
     assert app.state.runtime.ai.fallback_enabled is False
+    assert app.state.runtime.engine.message_max_chars == 42
 
 
 def test_approval_page_and_decision_flow(client):

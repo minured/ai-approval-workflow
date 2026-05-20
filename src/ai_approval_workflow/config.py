@@ -29,6 +29,7 @@ class AppSettings(BaseSettings):
     ai_model: str = "gpt-4.1-mini"
     ai_timeout_seconds: float = Field(default=30, ge=1)
     ai_fallback_enabled: bool = True
+    message_max_chars: int = Field(default=100, ge=0)
     notification_webhook_url: str = ""
     notification_bearer_token: str = ""
     notification_channel: str = "ops-default"
