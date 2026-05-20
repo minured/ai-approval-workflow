@@ -14,7 +14,7 @@ Manage scheduled AI workflows for `ai-approval-workflow`. The runtime executes s
 - Prefer soft delete: move YAML into `.deleted/` instead of permanent removal.
 - Admin web UI only views/deletes tasks; natural-language CRUD and capability planning are handled by this skill or another reviewed authoring process.
 - If timezone is ambiguous and timing matters, ask one short clarification. Otherwise follow the existing workflow timezone; for Chinese “早上/晚上” reminders, default to `Asia/Shanghai` unless the deployment has another documented default.
-- Respect the deployment message budget: `AAW_MESSAGE_MAX_CHARS` limits AI-generated notification/approval summaries. Default to 300 characters when unknown; `0` disables the limit.
+- Respect the deployment message budget: `AAW_MESSAGE_MAX_CHARS` limits AI-generated notification/approval summaries. Default to 800 characters when unknown; `0` disables the limit.
 
 ## Path conventions
 
@@ -124,5 +124,5 @@ For privileged actions, do not put commands in workflow YAML. Use `command_check
 - “只通知 / 不需要审批” -> use `notify` and no `approval`.
 - “确认后再执行” -> include `approval`; only use allowlisted actions.
 - “升级/不升级按钮” -> approval choices with values `approve` / `reject` and labels `升级` / `不升级`.
-- “简短发我 / 发消息给我” -> keep the AI summary within `AAW_MESSAGE_MAX_CHARS` (usually 300 characters).
+- “简短发我 / 发消息给我” -> keep the AI summary within `AAW_MESSAGE_MAX_CHARS` (usually 800 characters).
 - “删除任务” -> soft delete YAML and restart service if needed.
